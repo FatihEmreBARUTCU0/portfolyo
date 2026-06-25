@@ -83,7 +83,7 @@ const MOBILE: SceneConfig = {
   sparkleY: -0.8,
   fogNear: 10,
   fogFar: 30,
-  glowY: -1.2,
+  glowY: -0.45,
   glowRadius: 4.2,
   showGrid: false,
   showFloating: false,
