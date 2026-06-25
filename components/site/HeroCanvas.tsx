@@ -20,8 +20,8 @@ export default function HeroCanvas({ activeIndex }: { activeIndex: number }) {
     <Canvas
       style={{ width: "100%", height: "100%" }}
       camera={{
-        position: isMobile ? [0, 0.35, 7] : [0, 0.8, 8.5],
-        fov: isMobile ? 50 : 50,
+        position: isMobile ? [0, 0.7, 7.8] : [0, 0.8, 8.5],
+        fov: isMobile ? 48 : 50,
       }}
       dpr={isMobile ? 1 : [1, 2]}
       frameloop="always"

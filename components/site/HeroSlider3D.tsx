@@ -29,6 +29,8 @@ type SceneConfig = {
   floatAmp: number;
   useBasicScreen: boolean;
   showGlowRing: boolean;
+  carouselLerp: number;
+  frameColor: string;
 };
 
 const DESKTOP: SceneConfig = {
@@ -54,31 +56,35 @@ const DESKTOP: SceneConfig = {
   floatAmp: 0.08,
   useBasicScreen: false,
   showGlowRing: true,
+  carouselLerp: 0.05,
+  frameColor: "#252535",
 };
 
 const MOBILE: SceneConfig = {
-  cardActiveScale: 0.92,
-  cardIdleScale: 0.58,
+  cardActiveScale: 1,
+  cardIdleScale: 0.48,
   cardSize: [2.1, 1.25, 0.08],
   screenSize: [1.92, 1.1],
   barY: 0.65,
-  radius: 3,
+  radius: 3.35,
   carouselY: -0.55,
   stars: 400,
-  sparkles: 25,
-  sparkleScale: [10, 4, 8],
-  sparkleY: -1.2,
+  sparkles: 30,
+  sparkleScale: [12, 5, 10],
+  sparkleY: -1,
   fogNear: 9,
-  fogFar: 24,
-  glowY: -1.1,
-  glowRadius: 4,
+  fogFar: 26,
+  glowY: -1.3,
+  glowRadius: 3.6,
   showGrid: false,
   showFloating: false,
-  activeEmissive: 0.22,
+  activeEmissive: 0.38,
   activeLight: 0,
   floatAmp: 0.04,
   useBasicScreen: true,
-  showGlowRing: false,
+  showGlowRing: true,
+  carouselLerp: 0.065,
+  frameColor: "#3a3a52",
 };
 
 function GridFloor() {
@@ -140,7 +146,7 @@ function BrowserCard({
   useFrame((state) => {
     if (!groupRef.current) return;
     const targetScale = active ? config.cardActiveScale : config.cardIdleScale;
-    const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.07);
+    const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.08);
     groupRef.current.scale.setScalar(s);
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
       groupRef.current.rotation.y,
@@ -155,17 +161,29 @@ function BrowserCard({
   return (
     <group ref={groupRef} position={position}>
       <RoundedBox args={[w, h, d]} radius={0.06} smoothness={4}>
-        <meshStandardMaterial color="#252535" metalness={0.85} roughness={0.2} />
+        <meshStandardMaterial
+          color={config.frameColor}
+          metalness={0.75}
+          roughness={0.25}
+          transparent={!active && config.useBasicScreen}
+          opacity={!active && config.useBasicScreen ? 0.55 : 1}
+        />
       </RoundedBox>
 
       <mesh position={[0, 0, d * 0.55]}>
         <planeGeometry args={[sw, sh]} />
         {config.useBasicScreen ? (
-          <meshBasicMaterial
-            color={color}
-            transparent
-            opacity={active ? 0.75 : 0.28}
-          />
+          active ? (
+            <meshStandardMaterial
+              color={color}
+              emissive={color}
+              emissiveIntensity={config.activeEmissive}
+              metalness={0.15}
+              roughness={0.35}
+            />
+          ) : (
+            <meshBasicMaterial color={color} transparent opacity={0.2} />
+          )
         ) : (
           <meshStandardMaterial
             color={color}
@@ -210,7 +228,7 @@ function Carousel({
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
       groupRef.current.rotation.y,
       target,
-      0.05
+      config.carouselLerp
     );
   });
 
