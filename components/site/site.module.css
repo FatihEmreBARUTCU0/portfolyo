@@ -793,6 +793,11 @@
     height: 30vh;
   }
 
+  .heroCanvasWrap {
+    top: 32%;
+    height: 68%;
+  }
+
   .scrollHint {
     display: none;
   }
