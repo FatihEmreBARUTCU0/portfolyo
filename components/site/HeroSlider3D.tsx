@@ -73,7 +73,7 @@ const MOBILE: SceneConfig = {
   screenSize: [1.82, 1.05],
   barY: 0.62,
   radius: 3.5,
-  carouselY: -0.12,
+  carouselY: 0.1,
   carouselZ: 1.2,
   glowZ: -4,
   glowOpacity: 0.22,

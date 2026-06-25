@@ -704,9 +704,9 @@
   }
 
   .hero {
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 4.75rem 1.5rem 4.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1.5rem 5rem;
     min-height: 100svh;
   }
 
@@ -715,12 +715,11 @@
   }
 
   .heroOverlay {
-    background: linear-gradient(
-      to bottom,
-      rgba(19, 19, 26, 0.92) 0%,
-      rgba(19, 19, 26, 0.8) 26%,
-      rgba(19, 19, 26, 0.2) 42%,
-      transparent 52%
+    background: radial-gradient(
+      ellipse 120% 100% at 50% 50%,
+      rgba(19, 19, 26, 0.08) 0%,
+      rgba(19, 19, 26, 0.5) 60%,
+      rgba(19, 19, 26, 0.82) 100%
     );
   }
 
@@ -734,11 +733,11 @@
   .heroContent::before {
     content: "";
     position: absolute;
-    inset: -0.5rem -0.75rem 0;
+    inset: -1.5rem -1rem;
     background: radial-gradient(
-      ellipse 100% 90% at 50% 0%,
-      rgba(19, 19, 26, 0.65) 0%,
-      transparent 72%
+      ellipse 110% 110% at 50% 50%,
+      rgba(19, 19, 26, 0.72) 0%,
+      transparent 70%
     );
     z-index: -1;
     pointer-events: none;
