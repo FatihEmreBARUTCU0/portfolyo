@@ -6,6 +6,75 @@ import { RoundedBox, Stars, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 import { HERO_SLIDES } from "@/lib/heroSlides";
 
+type SceneConfig = {
+  cardActiveScale: number;
+  cardIdleScale: number;
+  cardSize: [number, number, number];
+  screenSize: [number, number];
+  barY: number;
+  radius: number;
+  carouselY: number;
+  stars: number;
+  sparkles: number;
+  sparkleScale: [number, number, number];
+  sparkleY: number;
+  fogNear: number;
+  fogFar: number;
+  glowY: number;
+  glowRadius: number;
+  showGrid: boolean;
+  showFloating: boolean;
+  activeEmissive: number;
+  activeLight: number;
+  floatAmp: number;
+};
+
+const DESKTOP: SceneConfig = {
+  cardActiveScale: 1.2,
+  cardIdleScale: 0.75,
+  cardSize: [2.8, 1.7, 0.1],
+  screenSize: [2.55, 1.45],
+  barY: 0.88,
+  radius: 4.2,
+  carouselY: -0.3,
+  stars: 1200,
+  sparkles: 120,
+  sparkleScale: [22, 10, 18],
+  sparkleY: 0,
+  fogNear: 10,
+  fogFar: 24,
+  glowY: -0.5,
+  glowRadius: 5.5,
+  showGrid: true,
+  showFloating: true,
+  activeEmissive: 0.65,
+  activeLight: 1.2,
+  floatAmp: 0.08,
+};
+
+const MOBILE: SceneConfig = {
+  cardActiveScale: 0.88,
+  cardIdleScale: 0.55,
+  cardSize: [1.85, 1.1, 0.07],
+  screenSize: [1.68, 0.95],
+  barY: 0.57,
+  radius: 2.5,
+  carouselY: -2.6,
+  stars: 550,
+  sparkles: 45,
+  sparkleScale: [12, 5, 10],
+  sparkleY: -2,
+  fogNear: 7,
+  fogFar: 18,
+  glowY: -2.8,
+  glowRadius: 3.2,
+  showGrid: false,
+  showFloating: false,
+  activeEmissive: 0.45,
+  activeLight: 0.7,
+  floatAmp: 0.04,
+};
+
 function GridFloor() {
   const lines = useMemo(() => {
     const pts: THREE.Vector3[] = [];
@@ -27,7 +96,7 @@ function GridFloor() {
   );
 }
 
-function GlowRing() {
+function GlowRing({ y, radius }: { y: number; radius: number }) {
   const ref = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -37,8 +106,8 @@ function GlowRing() {
   });
 
   return (
-    <mesh ref={ref} position={[0, -0.5, -2]}>
-      <torusGeometry args={[5.5, 0.02, 8, 120]} />
+    <mesh ref={ref} position={[0, y, -2]}>
+      <torusGeometry args={[radius, 0.02, 8, 120]} />
       <meshBasicMaterial color="#a855f7" transparent opacity={0.35} />
     </mesh>
   );
@@ -49,17 +118,22 @@ function BrowserCard({
   position,
   rotationY,
   active,
+  config,
 }: {
   color: string;
   position: [number, number, number];
   rotationY: number;
   active: boolean;
+  config: SceneConfig;
 }) {
   const groupRef = useRef<THREE.Group>(null);
+  const [w, h, d] = config.cardSize;
+  const [sw, sh] = config.screenSize;
+  const floatAmp = config.floatAmp;
 
   useFrame((state) => {
     if (!groupRef.current) return;
-    const targetScale = active ? 1.2 : 0.75;
+    const targetScale = active ? config.cardActiveScale : config.cardIdleScale;
     const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.07);
     groupRef.current.scale.setScalar(s);
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
@@ -69,49 +143,52 @@ function BrowserCard({
     );
     const baseY = position[1];
     groupRef.current.position.y =
-      baseY + Math.sin(state.clock.elapsedTime * 0.9 + position[0]) * 0.08;
+      baseY + Math.sin(state.clock.elapsedTime * 0.9 + position[0]) * floatAmp;
   });
 
   return (
     <group ref={groupRef} position={position}>
-      <RoundedBox args={[2.8, 1.7, 0.1]} radius={0.08} smoothness={4}>
+      <RoundedBox args={[w, h, d]} radius={0.06} smoothness={4}>
         <meshStandardMaterial color="#252535" metalness={0.85} roughness={0.2} />
       </RoundedBox>
 
-      <mesh position={[0, 0, 0.06]}>
-        <planeGeometry args={[2.55, 1.45]} />
+      <mesh position={[0, 0, d * 0.55]}>
+        <planeGeometry args={[sw, sh]} />
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={active ? 0.65 : 0.2}
+          emissiveIntensity={active ? config.activeEmissive : 0.15}
           metalness={0.2}
           roughness={0.3}
         />
       </mesh>
 
-      <mesh position={[0, 0.88, 0.07]}>
-        <planeGeometry args={[2.55, 0.1]} />
+      <mesh position={[0, config.barY, d * 0.65]}>
+        <planeGeometry args={[sw, 0.08]} />
         <meshStandardMaterial color="#3a3a50" metalness={0.7} roughness={0.25} />
       </mesh>
 
-      {[ -0.9, -0.55, -0.2 ].map((x) => (
-        <mesh key={x} position={[x, 0.88, 0.08]}>
-          <sphereGeometry args={[0.035, 8, 8]} />
-          <meshBasicMaterial color={color} />
-        </mesh>
-      ))}
-
       {active && (
-        <pointLight position={[0, 0, 0.5]} intensity={1.2} color={color} distance={4} />
+        <pointLight
+          position={[0, 0, 0.4]}
+          intensity={config.activeLight}
+          color={color}
+          distance={3}
+        />
       )}
     </group>
   );
 }
 
-function Carousel({ activeIndex }: { activeIndex: number }) {
+function Carousel({
+  activeIndex,
+  config,
+}: {
+  activeIndex: number;
+  config: SceneConfig;
+}) {
   const groupRef = useRef<THREE.Group>(null);
   const count = HERO_SLIDES.length;
-  const radius = 4.2;
 
   useFrame(() => {
     if (!groupRef.current) return;
@@ -124,17 +201,18 @@ function Carousel({ activeIndex }: { activeIndex: number }) {
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.3, 0]}>
+    <group ref={groupRef} position={[0, config.carouselY, 0]}>
       {HERO_SLIDES.map((slide, i) => {
         const angle = (i / count) * Math.PI * 2;
         return (
           <BrowserCard
             key={slide.title}
             color={slide.color}
+            config={config}
             position={[
-              Math.sin(angle) * radius,
+              Math.sin(angle) * config.radius,
               0,
-              Math.cos(angle) * radius,
+              Math.cos(angle) * config.radius,
             ]}
             rotationY={-angle + Math.PI}
             active={i === activeIndex}
@@ -190,38 +268,51 @@ function FloatingShapes() {
   );
 }
 
-export default function HeroSlider3D({ activeIndex }: { activeIndex: number }) {
+export default function HeroSlider3D({
+  activeIndex,
+  isMobile = false,
+}: {
+  activeIndex: number;
+  isMobile?: boolean;
+}) {
+  const config = isMobile ? MOBILE : DESKTOP;
+
   return (
     <>
-      <fog attach="fog" args={["#13131a", 10, 24]} />
+      <fog attach="fog" args={["#13131a", config.fogNear, config.fogFar]} />
 
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[4, 6, 5]} intensity={1.2} color="#ffffff" />
-      <pointLight position={[0, 3, 2]} intensity={2} color="#a855f7" />
-      <pointLight position={[-5, 1, 4]} intensity={1} color="#c084fc" />
-      <pointLight position={[5, -1, 3]} intensity={0.8} color="#8b5cf6" />
+      <ambientLight intensity={isMobile ? 0.5 : 0.6} />
+      <directionalLight position={[4, 6, 5]} intensity={isMobile ? 0.9 : 1.2} color="#ffffff" />
+      <pointLight position={[0, isMobile ? -1 : 3, 2]} intensity={isMobile ? 1.4 : 2} color="#a855f7" />
+      {!isMobile && (
+        <>
+          <pointLight position={[-5, 1, 4]} intensity={1} color="#c084fc" />
+          <pointLight position={[5, -1, 3]} intensity={0.8} color="#8b5cf6" />
+        </>
+      )}
 
       <Stars
-        radius={60}
-        depth={40}
-        count={1200}
-        factor={3}
+        radius={isMobile ? 45 : 60}
+        depth={isMobile ? 30 : 40}
+        count={config.stars}
+        factor={isMobile ? 2 : 3}
         saturation={0.2}
         fade
-        speed={0.5}
+        speed={0.4}
       />
       <Sparkles
-        count={120}
-        scale={[22, 10, 18]}
-        size={2.5}
-        speed={0.35}
+        count={config.sparkles}
+        position={[0, config.sparkleY, 0]}
+        scale={config.sparkleScale}
+        size={isMobile ? 1.6 : 2.5}
+        speed={0.3}
         color="#c084fc"
-        opacity={0.6}
+        opacity={isMobile ? 0.4 : 0.6}
       />
-      <GridFloor />
-      <GlowRing />
-      <FloatingShapes />
-      <Carousel activeIndex={activeIndex} />
+      {config.showGrid && <GridFloor />}
+      <GlowRing y={config.glowY} radius={config.glowRadius} />
+      {config.showFloating && <FloatingShapes />}
+      <Carousel activeIndex={activeIndex} config={config} />
     </>
   );
 }
