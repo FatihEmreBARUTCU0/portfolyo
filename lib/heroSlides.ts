@@ -1,13 +1,13 @@
 export const HERO_SLIDES = [
   {
     title: "Nexora",
-    tagline: "E-ticaret · Next.js + Stripe + Groq",
+    tagline: "Full-stack e-ticaret · MongoDB, Stripe, Groq",
     color: "#a855f7",
     gradient: "linear-gradient(135deg, #1a1030 0%, #2d1b4e 50%, #13131a 100%)",
   },
   {
     title: "Atelier",
-    tagline: "Moda mağazası · Supabase + Stripe",
+    tagline: "Supabase, Stripe · JWT ile admin panel",
     color: "#c084fc",
     gradient: "linear-gradient(135deg, #1f1528 0%, #3b2060 40%, #16161f 100%)",
   },

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Fatih Emre Barutçu | Full Stack Developer",
   description:
-    "İzmir merkezli Full Stack Developer portfolyosu. Next.js, React ve Flutter ile web uygulamaları.",
+    "İzmir merkezli Full Stack Developer portfolyosu. Next.js, React, Node.js, MongoDB ve Flutter ile web ve mobil uygulamalar.",
   openGraph: {
     title: "Fatih Emre Barutçu | Full Stack Developer",
     description:

@@ -8,14 +8,43 @@ export const COLORS = {
 export const FONT_URL =
   "https://cdn.jsdelivr.net/npm/@pmndrs/assets@0.0.8/fonts/inter-bold.woff";
 
+export const SKILL_GROUPS = [
+  {
+    title: "Frontend",
+    skills: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+  },
+  {
+    title: "Backend",
+    skills: [
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "PostgreSQL",
+      "REST API",
+      "Socket.IO",
+      "JWT",
+    ],
+  },
+  {
+    title: "Mobil",
+    skills: ["Flutter", "React Native"],
+  },
+  {
+    title: "Araçlar & Entegrasyon",
+    skills: ["Stripe", "Supabase", "Groq AI", "Three.js", "Vercel"],
+  },
+] as const;
+
+/** @deprecated use SKILL_GROUPS */
 export const SKILLS = [
   { name: "Next.js", level: 95, color: COLORS.purple },
   { name: "React", level: 95, color: COLORS.cyan },
   { name: "TypeScript", level: 90, color: COLORS.purple },
-  { name: "Flutter", level: 85, color: COLORS.cyan },
   { name: "Node.js", level: 88, color: COLORS.pink },
+  { name: "Express.js", level: 85, color: COLORS.pink },
+  { name: "MongoDB", level: 82, color: COLORS.purple },
   { name: "PostgreSQL", level: 82, color: COLORS.purple },
-  { name: "Three.js", level: 80, color: COLORS.cyan },
+  { name: "Flutter", level: 85, color: COLORS.cyan },
   { name: "Stripe", level: 85, color: COLORS.pink },
 ] as const;
 
@@ -32,21 +61,21 @@ export type Project = {
 export const DEMO_PROJECTS: Project[] = [
   {
     title: "Nexora",
-    description: "E-ticaret · Next.js + Stripe + Groq",
+    description: "Full-stack e-ticaret · MongoDB, Stripe, NextAuth, Groq",
     url: "https://nexora-six-wheat.vercel.app",
     color: COLORS.purple,
     thumbnail: "/projects/nexora.png",
   },
   {
     title: "Atelier",
-    description: "Moda mağazası · Supabase + Stripe",
+    description: "Full-stack moda mağazası · Supabase, Stripe, JWT",
     url: "https://giyim-store.vercel.app",
     color: COLORS.cyan,
     thumbnail: "/projects/atelier.png",
   },
   {
     title: "Matchora",
-    description: "MBTI eşleştirme · Socket.IO",
+    description: "Full-stack · Node.js, MongoDB, Socket.IO, JWT",
     url: "#",
     color: COLORS.pink,
     comingSoon: true,

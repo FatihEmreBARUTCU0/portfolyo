@@ -90,7 +90,7 @@ export default function Hero() {
           {slide.tagline}
           <br />
           <span className={styles.heroSubtitleDim}>
-            Next.js, React ve Flutter ile ölçeklenebilir uygulamalar.
+            Next.js, React, Node.js ve Flutter ile full-stack uygulamalar.
           </span>
         </motion.p>
 

@@ -1,4 +1,4 @@
-import { SKILLS } from "@/lib/constants";
+import { SKILL_GROUPS } from "@/lib/constants";
 import Reveal from "./Reveal";
 import styles from "./site.module.css";
 
@@ -11,10 +11,10 @@ export default function About() {
           Dijital ürünleri özenle inşa ediyorum.
         </h2>
         <p className={styles.sectionBody}>
-          İzmir merkezli Full Stack Developer&apos;ım. E-ticaret platformlarından
-          AI destekli araçlara kadar uçtan uca web uygulamaları geliştiriyorum.
-          SRNoto gibi canlı müşteri projelerinde tasarımdan deployment&apos;a
-          kadar sürecin tamamını yönettim.
+          İzmir merkezli Full Stack Developer&apos;ım. Next.js ve React ile
+          arayüz; Node.js, Express ve MongoDB/PostgreSQL ile API ve veri
+          katmanı geliştiriyorum. E-ticaret, gerçek zamanlı uygulamalar ve AI
+          entegrasyonlarında üretim ortamına hazır projeler teslim ettim.
         </p>
       </Reveal>
 
@@ -34,15 +34,22 @@ export default function About() {
         </div>
       </Reveal>
 
-      <Reveal delay={0.15}>
-        <ul className={styles.skills}>
-          {SKILLS.map((skill) => (
-            <li key={skill.name} className={styles.skill}>
-              {skill.name}
-            </li>
-          ))}
-        </ul>
-      </Reveal>
+      <div className={styles.skillGroups}>
+        {SKILL_GROUPS.map((group, i) => (
+          <Reveal key={group.title} delay={0.1 + i * 0.06}>
+            <div className={styles.skillGroup}>
+              <h3 className={styles.skillGroupTitle}>{group.title}</h3>
+              <ul className={styles.skills}>
+                {group.skills.map((skill) => (
+                  <li key={skill} className={styles.skill}>
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+        ))}
+      </div>
     </section>
   );
 }
