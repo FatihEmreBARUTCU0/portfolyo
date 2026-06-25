@@ -1,22 +1,26 @@
 "use client";
 
 import { useEffect } from "react";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-const CAROUSEL_Y = -0.55;
+const CAROUSEL_Y = -0.5;
+const LOOK_AT = new THREE.Vector3(0, CAROUSEL_Y, 0);
 
 export function MobileCameraRig() {
   const { camera } = useThree();
 
   useEffect(() => {
-    camera.position.set(0, 0.7, 7.8);
-    camera.lookAt(0, CAROUSEL_Y, 0);
     if (camera instanceof THREE.PerspectiveCamera) {
-      camera.fov = 48;
+      camera.fov = 52;
       camera.updateProjectionMatrix();
     }
   }, [camera]);
+
+  useFrame(() => {
+    camera.position.lerp(new THREE.Vector3(0, 0.9, 9.2), 0.06);
+    camera.lookAt(LOOK_AT);
+  });
 
   return null;
 }

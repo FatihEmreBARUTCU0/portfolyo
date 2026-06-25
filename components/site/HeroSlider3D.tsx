@@ -61,30 +61,30 @@ const DESKTOP: SceneConfig = {
 };
 
 const MOBILE: SceneConfig = {
-  cardActiveScale: 1,
-  cardIdleScale: 0.48,
-  cardSize: [2.1, 1.25, 0.08],
-  screenSize: [1.92, 1.1],
-  barY: 0.65,
-  radius: 3.35,
-  carouselY: -0.55,
+  cardActiveScale: 0.9,
+  cardIdleScale: 0.52,
+  cardSize: [2, 1.2, 0.08],
+  screenSize: [1.82, 1.05],
+  barY: 0.62,
+  radius: 3.75,
+  carouselY: -0.5,
   stars: 400,
   sparkles: 30,
-  sparkleScale: [12, 5, 10],
-  sparkleY: -1,
-  fogNear: 9,
-  fogFar: 26,
-  glowY: -1.3,
-  glowRadius: 3.6,
+  sparkleScale: [14, 6, 12],
+  sparkleY: -0.8,
+  fogNear: 10,
+  fogFar: 30,
+  glowY: -1.2,
+  glowRadius: 4.2,
   showGrid: false,
   showFloating: false,
-  activeEmissive: 0.38,
+  activeEmissive: 0.42,
   activeLight: 0,
   floatAmp: 0.04,
   useBasicScreen: true,
   showGlowRing: true,
-  carouselLerp: 0.065,
-  frameColor: "#3a3a52",
+  carouselLerp: 0.07,
+  frameColor: "#3d3d58",
 };
 
 function GridFloor() {
@@ -182,7 +182,7 @@ function BrowserCard({
               roughness={0.35}
             />
           ) : (
-            <meshBasicMaterial color={color} transparent opacity={0.2} />
+            <meshBasicMaterial color={color} transparent opacity={0.32} />
           )
         ) : (
           <meshStandardMaterial
