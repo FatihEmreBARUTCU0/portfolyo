@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import HeroSlider3D from "./HeroSlider3D";
+import { MobileCameraRig } from "./MobileCameraRig";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function HeroCanvas({ activeIndex }: { activeIndex: number }) {
@@ -19,8 +20,8 @@ export default function HeroCanvas({ activeIndex }: { activeIndex: number }) {
     <Canvas
       style={{ width: "100%", height: "100%" }}
       camera={{
-        position: isMobile ? [0, 1.8, 9.5] : [0, 0.8, 8.5],
-        fov: isMobile ? 44 : 50,
+        position: isMobile ? [0, 0.45, 6.2] : [0, 0.8, 8.5],
+        fov: isMobile ? 50 : 50,
       }}
       dpr={isMobile ? 1 : [1, 2]}
       frameloop="always"
@@ -30,6 +31,7 @@ export default function HeroCanvas({ activeIndex }: { activeIndex: number }) {
         powerPreference: "high-performance",
       }}
     >
+      {isMobile && <MobileCameraRig />}
       <HeroSlider3D activeIndex={activeIndex} isMobile={isMobile} />
     </Canvas>
   );
