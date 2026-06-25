@@ -67,33 +67,33 @@ const DESKTOP: SceneConfig = {
 };
 
 const MOBILE: SceneConfig = {
-  cardActiveScale: 1,
+  cardActiveScale: 0.9,
   cardIdleScale: 0.52,
-  cardSize: [2.15, 1.3, 0.08],
-  screenSize: [1.95, 1.12],
-  barY: 0.58,
-  radius: 0,
-  carouselY: -0.05,
-  carouselZ: 2.6,
-  glowZ: -2.2,
-  glowOpacity: 0.3,
+  cardSize: [2, 1.2, 0.08],
+  screenSize: [1.82, 1.05],
+  barY: 0.62,
+  radius: 3.5,
+  carouselY: -0.12,
+  carouselZ: 1.2,
+  glowZ: -4,
+  glowOpacity: 0.22,
   stars: 400,
   sparkles: 30,
   sparkleScale: [14, 6, 12],
   sparkleY: -0.8,
   fogNear: 10,
   fogFar: 30,
-  glowY: -0.9,
-  glowRadius: 3.6,
+  glowY: -0.45,
+  glowRadius: 4.2,
   showGrid: false,
   showFloating: false,
-  activeEmissive: 0.5,
+  activeEmissive: 0.42,
   activeLight: 0,
-  floatAmp: 0.03,
+  floatAmp: 0.04,
   useBasicScreen: true,
   showGlowRing: true,
   carouselLerp: 0.07,
-  frameColor: "#2a2a3d",
+  frameColor: "#3d3d58",
 };
 
 function GridFloor() {
@@ -270,7 +270,7 @@ function Carousel({
       renderOrder={2}
     >
       {HERO_SLIDES.map((slide, i) => {
-        if (isMobile ? i !== activeIndex : !isNeighbor(i)) return null;
+        if (isMobile && !isNeighbor(i)) return null;
         const angle = (i / count) * Math.PI * 2;
         return (
           <BrowserCard
