@@ -14,6 +14,9 @@ type SceneConfig = {
   barY: number;
   radius: number;
   carouselY: number;
+  carouselZ: number;
+  glowZ: number;
+  glowOpacity: number;
   stars: number;
   sparkles: number;
   sparkleScale: [number, number, number];
@@ -41,6 +44,9 @@ const DESKTOP: SceneConfig = {
   barY: 0.88,
   radius: 4.2,
   carouselY: -0.3,
+  carouselZ: 0,
+  glowZ: -2,
+  glowOpacity: 0.35,
   stars: 1200,
   sparkles: 120,
   sparkleScale: [22, 10, 18],
@@ -66,8 +72,11 @@ const MOBILE: SceneConfig = {
   cardSize: [2, 1.2, 0.08],
   screenSize: [1.82, 1.05],
   barY: 0.62,
-  radius: 3.75,
-  carouselY: -0.5,
+  radius: 3.5,
+  carouselY: -0.12,
+  carouselZ: 1.2,
+  glowZ: -4,
+  glowOpacity: 0.22,
   stars: 400,
   sparkles: 30,
   sparkleScale: [14, 6, 12],
@@ -108,7 +117,17 @@ function GridFloor() {
   );
 }
 
-function GlowRing({ y, radius }: { y: number; radius: number }) {
+function GlowRing({
+  y,
+  radius,
+  z,
+  opacity,
+}: {
+  y: number;
+  radius: number;
+  z: number;
+  opacity: number;
+}) {
   const ref = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -118,9 +137,14 @@ function GlowRing({ y, radius }: { y: number; radius: number }) {
   });
 
   return (
-    <mesh ref={ref} position={[0, y, -2]}>
+    <mesh ref={ref} position={[0, y, z]} renderOrder={0}>
       <torusGeometry args={[radius, 0.02, 8, 120]} />
-      <meshBasicMaterial color="#a855f7" transparent opacity={0.35} />
+      <meshBasicMaterial
+        color="#a855f7"
+        transparent
+        opacity={opacity}
+        depthWrite={false}
+      />
     </mesh>
   );
 }
@@ -159,7 +183,7 @@ function BrowserCard({
   });
 
   return (
-    <group ref={groupRef} position={position}>
+    <group ref={groupRef} position={position} renderOrder={3}>
       <RoundedBox args={[w, h, d]} radius={0.06} smoothness={4}>
         <meshStandardMaterial
           color={config.frameColor}
@@ -215,12 +239,19 @@ function BrowserCard({
 function Carousel({
   activeIndex,
   config,
+  isMobile,
 }: {
   activeIndex: number;
   config: SceneConfig;
+  isMobile: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const count = HERO_SLIDES.length;
+
+  const isNeighbor = (i: number) => {
+    const diff = Math.abs(i - activeIndex);
+    return Math.min(diff, count - diff) <= 1;
+  };
 
   useFrame(() => {
     if (!groupRef.current) return;
@@ -233,8 +264,13 @@ function Carousel({
   });
 
   return (
-    <group ref={groupRef} position={[0, config.carouselY, 0]}>
+    <group
+      ref={groupRef}
+      position={[0, config.carouselY, config.carouselZ]}
+      renderOrder={2}
+    >
       {HERO_SLIDES.map((slide, i) => {
+        if (isMobile && !isNeighbor(i)) return null;
         const angle = (i / count) * Math.PI * 2;
         return (
           <BrowserCard
@@ -345,10 +381,15 @@ export default function HeroSlider3D({
       />
       {config.showGrid && <GridFloor />}
       {config.showGlowRing && (
-        <GlowRing y={config.glowY} radius={config.glowRadius} />
+        <GlowRing
+          y={config.glowY}
+          radius={config.glowRadius}
+          z={config.glowZ}
+          opacity={config.glowOpacity}
+        />
       )}
       {config.showFloating && <FloatingShapes />}
-      <Carousel activeIndex={activeIndex} config={config} />
+      <Carousel activeIndex={activeIndex} config={config} isMobile={isMobile} />
     </>
   );
 }
