@@ -27,6 +27,8 @@ type SceneConfig = {
   activeEmissive: number;
   activeLight: number;
   floatAmp: number;
+  useBasicScreen: boolean;
+  showGlowRing: boolean;
 };
 
 const DESKTOP: SceneConfig = {
@@ -50,29 +52,33 @@ const DESKTOP: SceneConfig = {
   activeEmissive: 0.65,
   activeLight: 1.2,
   floatAmp: 0.08,
+  useBasicScreen: false,
+  showGlowRing: true,
 };
 
 const MOBILE: SceneConfig = {
-  cardActiveScale: 1.05,
-  cardIdleScale: 0.62,
-  cardSize: [2.25, 1.35, 0.08],
-  screenSize: [2.05, 1.18],
-  barY: 0.7,
-  radius: 2.9,
-  carouselY: -0.35,
-  stars: 550,
-  sparkles: 50,
-  sparkleScale: [14, 6, 12],
-  sparkleY: -0.8,
-  fogNear: 8,
-  fogFar: 22,
+  cardActiveScale: 0.92,
+  cardIdleScale: 0.58,
+  cardSize: [2.1, 1.25, 0.08],
+  screenSize: [1.92, 1.1],
+  barY: 0.65,
+  radius: 3,
+  carouselY: -0.55,
+  stars: 400,
+  sparkles: 25,
+  sparkleScale: [10, 4, 8],
+  sparkleY: -1.2,
+  fogNear: 9,
+  fogFar: 24,
   glowY: -1.1,
   glowRadius: 4,
   showGrid: false,
   showFloating: false,
-  activeEmissive: 0.55,
-  activeLight: 0.85,
-  floatAmp: 0.05,
+  activeEmissive: 0.22,
+  activeLight: 0,
+  floatAmp: 0.04,
+  useBasicScreen: true,
+  showGlowRing: false,
 };
 
 function GridFloor() {
@@ -154,13 +160,21 @@ function BrowserCard({
 
       <mesh position={[0, 0, d * 0.55]}>
         <planeGeometry args={[sw, sh]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={active ? config.activeEmissive : 0.15}
-          metalness={0.2}
-          roughness={0.3}
-        />
+        {config.useBasicScreen ? (
+          <meshBasicMaterial
+            color={color}
+            transparent
+            opacity={active ? 0.75 : 0.28}
+          />
+        ) : (
+          <meshStandardMaterial
+            color={color}
+            emissive={color}
+            emissiveIntensity={active ? config.activeEmissive : 0.15}
+            metalness={0.2}
+            roughness={0.3}
+          />
+        )}
       </mesh>
 
       <mesh position={[0, config.barY, d * 0.65]}>
@@ -168,7 +182,7 @@ function BrowserCard({
         <meshStandardMaterial color="#3a3a50" metalness={0.7} roughness={0.25} />
       </mesh>
 
-      {active && (
+      {active && config.activeLight > 0 && (
         <pointLight
           position={[0, 0, 0.4]}
           intensity={config.activeLight}
@@ -281,9 +295,11 @@ export default function HeroSlider3D({
     <>
       <fog attach="fog" args={["#13131a", config.fogNear, config.fogFar]} />
 
-      <ambientLight intensity={isMobile ? 0.5 : 0.6} />
-      <directionalLight position={[4, 6, 5]} intensity={isMobile ? 0.9 : 1.2} color="#ffffff" />
-      <pointLight position={[0, isMobile ? -1 : 3, 2]} intensity={isMobile ? 1.4 : 2} color="#a855f7" />
+      <ambientLight intensity={isMobile ? 0.65 : 0.6} />
+      <directionalLight position={[4, 6, 5]} intensity={isMobile ? 0.5 : 1.2} color="#ffffff" />
+      {!isMobile && (
+        <pointLight position={[0, 3, 2]} intensity={2} color="#a855f7" />
+      )}
       {!isMobile && (
         <>
           <pointLight position={[-5, 1, 4]} intensity={1} color="#c084fc" />
@@ -310,7 +326,9 @@ export default function HeroSlider3D({
         opacity={isMobile ? 0.4 : 0.6}
       />
       {config.showGrid && <GridFloor />}
-      <GlowRing y={config.glowY} radius={config.glowRadius} />
+      {config.showGlowRing && (
+        <GlowRing y={config.glowY} radius={config.glowRadius} />
+      )}
       {config.showFloating && <FloatingShapes />}
       <Carousel activeIndex={activeIndex} config={config} />
     </>
