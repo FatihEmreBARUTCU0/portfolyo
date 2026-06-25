@@ -248,11 +248,6 @@ function Carousel({
   const groupRef = useRef<THREE.Group>(null);
   const count = HERO_SLIDES.length;
 
-  const isNeighbor = (i: number) => {
-    const diff = Math.abs(i - activeIndex);
-    return Math.min(diff, count - diff) <= 1;
-  };
-
   useFrame(() => {
     if (!groupRef.current) return;
     const target = -(activeIndex / count) * Math.PI * 2;
@@ -270,7 +265,7 @@ function Carousel({
       renderOrder={2}
     >
       {HERO_SLIDES.map((slide, i) => {
-        if (isMobile && !isNeighbor(i)) return null;
+        if (isMobile && i !== activeIndex) return null;
         const angle = (i / count) * Math.PI * 2;
         return (
           <BrowserCard
