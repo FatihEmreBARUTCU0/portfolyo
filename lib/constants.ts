@@ -108,6 +108,13 @@ export const DEMO_PROJECTS: Project[] = [
     color: COLORS.pink,
     thumbnail: "/projects/sanatci-portfolio.png",
   },
+  {
+    title: "Lezzet House",
+    description: "Ön çalışma · Restoran landing page konsepti",
+    url: "https://restoran-sitesi.vercel.app",
+    color: COLORS.purple,
+    thumbnail: "/projects/lezzet-house.png",
+  },
 ];
 
 export const CLIENT_PROJECTS: Project[] = [
