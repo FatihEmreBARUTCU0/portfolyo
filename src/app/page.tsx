@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   ArrowUpRight,
@@ -182,6 +183,15 @@ function ProjectCard({
 
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
   const buttonPrimary =
     "rounded-full bg-[#d4af37] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-black transition duration-300 hover:bg-[#e0be55]";
   const buttonSecondary =
@@ -194,13 +204,14 @@ export default function Home() {
           <Waitlist />
           <div className="hero-fallback-motion absolute inset-0 z-0 bg-[radial-gradient(circle_at_22%_30%,rgba(212,175,55,0.3),transparent_34%),linear-gradient(135deg,#181818_0%,#0f0f0f_55%,#0a0a0a_100%)]" />
           <video
-            className="absolute inset-0 z-[1] hidden h-full w-full object-cover md:block"
+            className="absolute inset-0 z-[1] h-full w-full object-cover"
             autoPlay
             muted
             loop
             playsInline
             preload="metadata"
             aria-hidden="true"
+            poster="/projects/srnoto.png"
           >
             <source src="/videos/hero-bg.mp4" type="video/mp4" />
           </video>
@@ -311,7 +322,9 @@ export default function Home() {
         </motion.section>
 
         <motion.section
-          {...sectionMotion}
+          {...(prefersReducedMotion || isMobile
+            ? { initial: false }
+            : sectionMotion)}
           className="mt-24 rounded-2xl border border-white/10 bg-[#111111] px-6 py-14 shadow-[0_12px_30px_-24px_rgba(0,0,0,0.8)] md:px-8 md:py-16"
         >
           <div className="mb-4 h-px w-20 bg-gradient-to-r from-[#d4af37] to-transparent" />
@@ -333,9 +346,9 @@ export default function Home() {
           <motion.div
             id="yapilmis-isler"
             className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-3"
-            initial={prefersReducedMotion ? false : "hidden"}
+            initial={prefersReducedMotion || isMobile ? false : "hidden"}
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, amount: 0.08 }}
             variants={{
               hidden: {},
               visible: {
@@ -347,7 +360,7 @@ export default function Home() {
               <motion.div
                 key={project.title}
                 variants={
-                  prefersReducedMotion
+                  prefersReducedMotion || isMobile
                     ? undefined
                     : {
                         hidden: { opacity: 0, y: 22 },
@@ -367,9 +380,9 @@ export default function Home() {
           </p>
           <motion.div
             className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-3"
-            initial={prefersReducedMotion ? false : "hidden"}
+            initial={prefersReducedMotion || isMobile ? false : "hidden"}
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, amount: 0.08 }}
             variants={{
               hidden: {},
               visible: {
@@ -381,7 +394,7 @@ export default function Home() {
               <motion.div
                 key={project.title}
                 variants={
-                  prefersReducedMotion
+                  prefersReducedMotion || isMobile
                     ? undefined
                     : {
                         hidden: { opacity: 0, y: 20 },
