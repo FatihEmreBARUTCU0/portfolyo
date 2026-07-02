@@ -7,6 +7,7 @@ import {
   Phone,
 } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import Waitlist from "@/components/ui/background-shader";
 
 type Project = {
   id: string;
@@ -190,9 +191,10 @@ export default function Home() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <main className="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8 md:pb-24">
         <section className="relative left-1/2 right-1/2 mb-12 min-h-[86vh] w-screen -translate-x-1/2 overflow-hidden pb-4">
+          <Waitlist />
           <div className="hero-fallback-motion absolute inset-0 z-0 bg-[radial-gradient(circle_at_22%_30%,rgba(212,175,55,0.3),transparent_34%),linear-gradient(135deg,#181818_0%,#0f0f0f_55%,#0a0a0a_100%)]" />
           <video
-            className="absolute inset-0 z-0 h-full w-full object-cover"
+            className="absolute inset-0 z-[1] hidden h-full w-full object-cover md:block"
             autoPlay
             muted
             loop
@@ -204,7 +206,6 @@ export default function Home() {
           </video>
           <div className="absolute inset-0 z-10 bg-black/60" />
           <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_40%,rgba(212,175,55,0.2),transparent_28%),linear-gradient(to_bottom,rgba(10,10,10,0.2),rgba(10,10,10,0.72))]" />
-          <div className="absolute inset-0 z-10 bg-[#0f0f0f] md:hidden" />
 
           <header className="relative z-20 mx-auto flex w-full max-w-6xl items-center justify-between px-4 pt-3 md:px-8">
             <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-black/30 text-xl font-bold">
