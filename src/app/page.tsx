@@ -183,7 +183,7 @@ function ProjectCard({
 
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 767px)");
@@ -209,9 +209,8 @@ export default function Home() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             aria-hidden="true"
-            poster="/projects/srnoto.png"
           >
             <source src="/videos/hero-bg.mp4" type="video/mp4" />
           </video>
